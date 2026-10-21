@@ -1,0 +1,16 @@
+name: analytics_repo
+version: "1.0.0"
+config-version: 2
+profile: analytics_repo
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+
+models:
+  analytics_repo:
+    silver:
+      +schema: silver
+      +materialized: table
+    gold:
+      +schema: gold
+      +materialized: table

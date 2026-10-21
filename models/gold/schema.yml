@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: gold_monthly_sales
+    description: >
+      Monthly sales. One row per calendar month with the number of distinct orders
+      and total net revenue (extended price after discount).
+    columns:
+      - name: month
+        description: First day of the calendar month.
+        tests: [not_null, unique]
+      - name: orders
+        description: Number of distinct orders placed in the month.
+      - name: revenue
+        description: Total net revenue in the month.
+  - name: gold_top_customers
+    description: >
+      Revenue and order counts per customer, with nation and region. Use it to
+      rank customers or compare regions.
+    columns:
+      - name: customer_id
+        description: Unique customer identifier.
+        tests: [not_null, unique]
+      - name: customer_name
+        description: Customer name.
+      - name: nation
+        description: Customer nation.
+      - name: region
+        description: Customer region (AFRICA, AMERICA, ASIA, EUROPE, MIDDLE EAST).
+      - name: orders
+        description: Number of distinct orders.
+      - name: revenue
+        description: Total net revenue.
+  - name: gold_supplier_performance
+    description: >
+      Supplier delivery performance. One row per supplier with delivered lines,
+      revenue and the average delay in days between commit date and receipt date.
+    columns:
+      - name: supplier_id
+        description: Unique supplier identifier.
+        tests: [not_null, unique]
+      - name: supplier_name
+        description: Supplier name.
+      - name: nation
+        description: Supplier nation.
+      - name: lines_delivered
+        description: Number of order lines supplied.
+      - name: revenue
+        description: Total net revenue of the supplied lines.
+      - name: avg_delay_days
+        description: Average days between commit date and receipt date (positive means late).

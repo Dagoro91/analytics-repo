@@ -1,0 +1,17 @@
+[
+  {"id": 1, "question": "How many customers have placed at least one order?", "expected_sql": "SELECT count(*) FROM gold.gold_top_customers"},
+  {"id": 2, "question": "What is the total revenue across all months?", "expected_sql": "SELECT sum(revenue) FROM gold.gold_monthly_sales"},
+  {"id": 3, "question": "Which month had the highest revenue?", "expected_sql": "SELECT month FROM gold.gold_monthly_sales ORDER BY revenue DESC LIMIT 1"},
+  {"id": 4, "question": "What was the total revenue in 1995?", "expected_sql": "SELECT sum(revenue) FROM gold.gold_monthly_sales WHERE year(month) = 1995"},
+  {"id": 5, "question": "Who are the top 5 customers by revenue?", "expected_sql": "SELECT customer_name FROM gold.gold_top_customers ORDER BY revenue DESC LIMIT 5"},
+  {"id": 6, "question": "Which region has the highest total customer revenue?", "expected_sql": "SELECT region FROM gold.gold_top_customers GROUP BY region ORDER BY sum(revenue) DESC LIMIT 1"},
+  {"id": 7, "question": "How many customers are in the EUROPE region?", "expected_sql": "SELECT count(*) FROM gold.gold_top_customers WHERE region = 'EUROPE'"},
+  {"id": 8, "question": "What is the total revenue per region?", "expected_sql": "SELECT region, sum(revenue) FROM gold.gold_top_customers GROUP BY region"},
+  {"id": 9, "question": "Which customer nation has the most orders?", "expected_sql": "SELECT nation FROM gold.gold_top_customers GROUP BY nation ORDER BY sum(orders) DESC LIMIT 1"},
+  {"id": 10, "question": "How many suppliers are there?", "expected_sql": "SELECT count(*) FROM gold.gold_supplier_performance"},
+  {"id": 11, "question": "Which supplier has the highest revenue?", "expected_sql": "SELECT supplier_name FROM gold.gold_supplier_performance ORDER BY revenue DESC LIMIT 1"},
+  {"id": 12, "question": "Which supplier has the highest average delay in days?", "expected_sql": "SELECT supplier_name FROM gold.gold_supplier_performance ORDER BY avg_delay_days DESC LIMIT 1"},
+  {"id": 13, "question": "How many suppliers have a positive average delay?", "expected_sql": "SELECT count(*) FROM gold.gold_supplier_performance WHERE avg_delay_days > 0"},
+  {"id": 14, "question": "What are the top 3 supplier nations by revenue?", "expected_sql": "SELECT nation FROM gold.gold_supplier_performance GROUP BY nation ORDER BY sum(revenue) DESC LIMIT 3"},
+  {"id": 15, "question": "How many months of sales data are available?", "expected_sql": "SELECT count(*) FROM gold.gold_monthly_sales"}
+]
