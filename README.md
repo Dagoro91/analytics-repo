@@ -1,4 +1,5 @@
 # analytics-repo: medallion pipeline + Text-to-SQL with evaluation
+![ci](https://github.com/Dagoro91/analytics-repo/actions/workflows/ci.yml/badge.svg)
 
 A small, fully reproducible data engineering project that runs on a laptop at zero cost.
 It builds a Bronze / Silver / Gold warehouse with dbt and DuckDB, tests data quality in CI,
@@ -78,20 +79,39 @@ How it works:
 
 ## Evaluation
 
-`eval/questions.json` holds 15 questions with a reference SQL for each.
-`python -m ai.evaluate` runs both modes and compares result sets with the reference
-(order-insensitive, numbers rounded to 2 decimals). It writes `eval/results.md` and `eval/results.json`.
+`eval/questions.json` holds 15 questions with a reference SQL for each. `python -m ai.evaluate` runs the model in two modes and compares each result set with the reference. Two scores are reported:
 
-Results (fill in after running on your machine and model):
+- **Exact match:** the result set equals the reference (order-insensitive, numbers rounded to 2 decimals).
+- **Ignoring extra columns:** same, but the query may return additional columns, which is still a correct answer. This score was added after a first run showed that helpful extra columns were being counted as errors.
 
-| Mode | Correct | Accuracy |
+`python -m ai.evaluate --rescore` re-scores the saved SQL in `eval/results.json` without calling the model again. Results are written to `eval/results.md` and `eval/results.json`.
+
+### Results
+
+Model: `NOMBRE_DEL_MODELO`, running locally via Ollama.
+
+| Mode | Exact match | Ignoring extra columns |
 |---|---|---|
-| baseline (names only) | | |
-| RAG (documented schema) | | |
+| baseline (names only) | 7/15 (47%) | 10/15 (67%) |
+| RAG (documented schema) | 9/15 (60%) | 15/15 (100%) |
+
+### Findings
+
+- Retrieving the documented schema improved accuracy under both scores. All five baseline failures under the tolerant score were queries that did not execute: invented columns or joins that do not exist in the Gold layer (questions 1, 6, 8), a GROUP BY error (3) and a LIKE on a date column (4). None returned a plausible but wrong result.
+- Most of the gap between the two scores comes from queries that were correct but returned an extra column, such as the revenue next to a customer name.
+- Safety held: every query passes a read-only SELECT guard and runs on a read-only connection, so wrong queries fail without side effects.
+
+### Next steps
+
+- Feed the database error back to the model for one retry.
+- Add example question and SQL pairs to the prompt.
+- Add a held-out set of questions written after the documentation is frozen, and test a larger model.
 
 ## Limitations
 
-- 15 questions is a small evaluation set; treat results as indicative.
+- 15 questions is a small set. The schema documentation and the questions were written together, so the RAG score is an upper bound, not a general accuracy claim.
+- The "ignoring extra columns" score is more lenient than exact match.
+- Each mode was scored on a single run, and model output varies slightly between runs (one baseline answer changed between two runs). `eval/results.json` is kept in the repo as evidence of the reported run.
 - Result comparison ignores row order.
 - Results depend on the local model you choose.
 - TPC-H is synthetic: it demonstrates the pattern, not real business data.

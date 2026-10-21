@@ -1,0 +1,212 @@
+[
+  {
+    "mode": "baseline (names only)",
+    "id": 1,
+    "exact": false,
+    "tolerant": false,
+    "sql": "ERROR: Binder Error: Referenced column \"customer_id\" not found in FROM clause!\nCandidate bindings: \"orders\"\n\nLINE 1: SELECT * FROM (SELECT COUNT(DISTINCT customer_id) AS customer_count\n                                             ^^^^^^^^^^^"
+  },
+  {
+    "mode": "baseline (names only)",
+    "id": 2,
+    "exact": true,
+    "tolerant": true,
+    "sql": "SELECT SUM(revenue) AS total_revenue\nFROM gold.gold_monthly_sales;"
+  },
+  {
+    "mode": "baseline (names only)",
+    "id": 3,
+    "exact": false,
+    "tolerant": false,
+    "sql": "ERROR: Binder Error: column \"month\" must appear in the GROUP BY clause or must be part of an aggregate function.\nEither add it to the GROUP BY list, or use ANY_VALUE(\"month\") if the exact value of \"month\" is not important.\n\nLINE 1: SELECT * FROM (SELECT month, MAX(revenue) AS max_revenue\n                              ^^^^^"
+  },
+  {
+    "mode": "baseline (names only)",
+    "id": 4,
+    "exact": false,
+    "tolerant": false,
+    "sql": "ERROR: Binder Error: No function matches the given name and argument types '~~(TIMESTAMP, STRING_LITERAL)'. You might need to add explicit type casts.\n\tCandidate functions:\n\t\"~~\"(string VARCHAR, pattern VARCHAR, /) -> BOOLEAN\n\n\nLINE 3: WHERE month LIKE '1995%') AS q LIMIT 200\n                    ^^^^^^^^^^^^"
+  },
+  {
+    "mode": "baseline (names only)",
+    "id": 5,
+    "exact": false,
+    "tolerant": true,
+    "sql": "SELECT customer_id, customer_name, nation, region, orders, revenue\nFROM gold.gold_top_customers\nORDER BY revenue DESC\nLIMIT 5;"
+  },
+  {
+    "mode": "baseline (names only)",
+    "id": 6,
+    "exact": false,
+    "tolerant": false,
+    "sql": "ERROR: Binder Error: Table \"T1\" does not have a column named \"customer_id\"\n\nCandidate bindings: : \"orders\"\n\nLINE 3: JOIN gold.gold_top_customers AS T2 ON T1.customer_id = T2.customer_id\n                                              ^^^^^^^^^^^^^^"
+  },
+  {
+    "mode": "baseline (names only)",
+    "id": 7,
+    "exact": true,
+    "tolerant": true,
+    "sql": "SELECT COUNT(customer_id) AS customer_count\nFROM gold.gold_top_customers\nWHERE region = 'EUROPE';"
+  },
+  {
+    "mode": "baseline (names only)",
+    "id": 8,
+    "exact": false,
+    "tolerant": false,
+    "sql": "ERROR: Binder Error: Referenced column \"region\" not found in FROM clause!\nCandidate bindings: \"revenue\", \"orders\"\n\nLINE 3: GROUP BY region) AS q LIMIT 200\n                 ^^^^^^"
+  },
+  {
+    "mode": "baseline (names only)",
+    "id": 9,
+    "exact": true,
+    "tolerant": true,
+    "sql": "SELECT nation\nFROM gold.gold_top_customers\nGROUP BY nation\nORDER BY SUM(orders) DESC\nLIMIT 1;"
+  },
+  {
+    "mode": "baseline (names only)",
+    "id": 10,
+    "exact": true,
+    "tolerant": true,
+    "sql": "SELECT COUNT(DISTINCT supplier_id) AS supplier_count\nFROM gold.gold_supplier_performance;"
+  },
+  {
+    "mode": "baseline (names only)",
+    "id": 11,
+    "exact": false,
+    "tolerant": true,
+    "sql": "SELECT supplier_id, supplier_name, SUM(revenue) AS total_revenue\nFROM gold.gold_supplier_performance\nGROUP BY supplier_id, supplier_name\nORDER BY total_revenue DESC\nLIMIT 1;"
+  },
+  {
+    "mode": "baseline (names only)",
+    "id": 12,
+    "exact": false,
+    "tolerant": true,
+    "sql": "SELECT supplier_id, supplier_name, nation, avg_delay_days\nFROM gold.gold_supplier_performance\nORDER BY avg_delay_days DESC\nLIMIT 1;"
+  },
+  {
+    "mode": "baseline (names only)",
+    "id": 13,
+    "exact": true,
+    "tolerant": true,
+    "sql": "SELECT COUNT(supplier_id) \nFROM gold.gold_supplier_performance \nWHERE avg_delay_days > 0;"
+  },
+  {
+    "mode": "baseline (names only)",
+    "id": 14,
+    "exact": true,
+    "tolerant": true,
+    "sql": "SELECT nation\nFROM gold.gold_supplier_performance\nGROUP BY nation\nORDER BY SUM(revenue) DESC\nLIMIT 3;"
+  },
+  {
+    "mode": "baseline (names only)",
+    "id": 15,
+    "exact": true,
+    "tolerant": true,
+    "sql": "SELECT COUNT(DISTINCT month) FROM gold.gold_monthly_sales;"
+  },
+  {
+    "mode": "RAG (documented schema)",
+    "id": 1,
+    "exact": true,
+    "tolerant": true,
+    "sql": "SELECT COUNT(DISTINCT customer_id) AS num_customers_with_orders\nFROM gold.gold_top_customers;"
+  },
+  {
+    "mode": "RAG (documented schema)",
+    "id": 2,
+    "exact": true,
+    "tolerant": true,
+    "sql": "SELECT SUM(revenue) AS total_revenue\nFROM gold.gold_monthly_sales;"
+  },
+  {
+    "mode": "RAG (documented schema)",
+    "id": 3,
+    "exact": false,
+    "tolerant": true,
+    "sql": "SELECT month, revenue\nFROM gold.gold_monthly_sales\nORDER BY revenue DESC\nLIMIT 1;"
+  },
+  {
+    "mode": "RAG (documented schema)",
+    "id": 4,
+    "exact": true,
+    "tolerant": true,
+    "sql": "SELECT SUM(revenue) AS total_revenue_1995\nFROM gold.gold_monthly_sales\nWHERE month >= '1995-01-01' AND month < '1996-01-01';"
+  },
+  {
+    "mode": "RAG (documented schema)",
+    "id": 5,
+    "exact": false,
+    "tolerant": true,
+    "sql": "SELECT customer_name, revenue\nFROM gold.gold_top_customers\nORDER BY revenue DESC\nLIMIT 5;"
+  },
+  {
+    "mode": "RAG (documented schema)",
+    "id": 6,
+    "exact": false,
+    "tolerant": true,
+    "sql": "SELECT region, SUM(revenue) AS total_revenue\nFROM gold.gold_top_customers\nGROUP BY region\nORDER BY total_revenue DESC\nLIMIT 1;"
+  },
+  {
+    "mode": "RAG (documented schema)",
+    "id": 7,
+    "exact": true,
+    "tolerant": true,
+    "sql": "SELECT COUNT(customer_id) AS customer_count\nFROM gold.gold_top_customers\nWHERE region = 'EUROPE';"
+  },
+  {
+    "mode": "RAG (documented schema)",
+    "id": 8,
+    "exact": true,
+    "tolerant": true,
+    "sql": "SELECT region, SUM(revenue) AS total_revenue\nFROM gold.gold_top_customers\nGROUP BY region;"
+  },
+  {
+    "mode": "RAG (documented schema)",
+    "id": 9,
+    "exact": true,
+    "tolerant": true,
+    "sql": "SELECT nation\nFROM gold.gold_top_customers\nGROUP BY nation\nORDER BY COUNT(orders) DESC\nLIMIT 1;"
+  },
+  {
+    "mode": "RAG (documented schema)",
+    "id": 10,
+    "exact": true,
+    "tolerant": true,
+    "sql": "SELECT COUNT(DISTINCT supplier_id) AS supplier_count\nFROM gold.gold_supplier_performance;"
+  },
+  {
+    "mode": "RAG (documented schema)",
+    "id": 11,
+    "exact": false,
+    "tolerant": true,
+    "sql": "SELECT supplier_name, revenue\nFROM gold.gold_supplier_performance\nORDER BY revenue DESC\nLIMIT 1;"
+  },
+  {
+    "mode": "RAG (documented schema)",
+    "id": 12,
+    "exact": false,
+    "tolerant": true,
+    "sql": "SELECT supplier_name, avg_delay_days\nFROM gold.gold_supplier_performance\nORDER BY avg_delay_days DESC\nLIMIT 1;"
+  },
+  {
+    "mode": "RAG (documented schema)",
+    "id": 13,
+    "exact": true,
+    "tolerant": true,
+    "sql": "SELECT COUNT(supplier_id) AS num_suppliers_with_positive_delay\nFROM gold.gold_supplier_performance\nWHERE avg_delay_days > 0;"
+  },
+  {
+    "mode": "RAG (documented schema)",
+    "id": 14,
+    "exact": false,
+    "tolerant": true,
+    "sql": "SELECT nation, SUM(revenue) AS total_revenue\nFROM gold.gold_supplier_performance\nGROUP BY nation\nORDER BY total_revenue DESC\nLIMIT 3;"
+  },
+  {
+    "mode": "RAG (documented schema)",
+    "id": 15,
+    "exact": true,
+    "tolerant": true,
+    "sql": "SELECT COUNT(DISTINCT month) AS num_months FROM gold.gold_monthly_sales;"
+  }
+]
